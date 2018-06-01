@@ -25,7 +25,7 @@ public:
 	virtual void Init();
 
 	UFUNCTION(BlueprintCallable)//call by blueprint
-	void LoadMenu();
+	void LoadMenuWidget();
 
 	UFUNCTION(BlueprintCallable)//call by blueprint
 	void InGameLoadMenu();
@@ -40,12 +40,14 @@ public:
 
 
 private :
-	TSubclassOf<UUserWidget> MenuClass;
 
+	TSubclassOf<UUserWidget> MenuClass;
 	TSubclassOf<UUserWidget> InGameMenuClass;
 
 
 	UMenuWidget *Menu;
+
+
 
 
 	

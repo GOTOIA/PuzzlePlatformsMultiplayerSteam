@@ -2,17 +2,27 @@
 
 #include "MainMenu.h"
 
+#include "UObject/ConstructorHelpers.h"
+
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/EditableTextBox.h"
+#include "Components/TextBlock.h"
+
+#include "ServerRow.h"
 
 
+UMainMenu::UMainMenu(const FObjectInitializer & ObjectInitializer)
+{
+	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/MenuSystem/WBP_ServerRow"));
+	if (!ensure(ServerRowBPClass.Class != nullptr)) return;
+
+	ServerRowClass = ServerRowBPClass.Class;
+}
 
 
 bool UMainMenu::Initialize(){
  
-     /*cmdHost = (UButton*) GetWidgetFromName(TEXT("cmdHost"));
-     cmdHost->OnClicked.AddDynamic(this, &UMainMenu::hostServer);*/
 
     bool Success = Super::Initialize();
     if (!Success) return false;
@@ -58,11 +68,32 @@ void UMainMenu::hostServer(){
 
 }
 
+void UMainMenu::SetServerList(TArray<FString> ServerNames)
+{
+	UWorld* World = this->GetWorld();
+	if (!ensure(World != nullptr)) return;
+
+	ServerList->ClearChildren();
+
+	for (const FString& ServerName : ServerNames)
+	{
+		UServerRow* Row = CreateWidget<UServerRow>(World, ServerRowClass);
+		if (!ensure(Row != nullptr)) return;
+
+		Row->ServerName->SetText(FText::FromString(ServerName));
+
+		ServerList->AddChild(Row);
+	}
+}
+
 void UMainMenu::OpenJoinMenu()
 {
 	if (!ensure(MenuSwitcher != nullptr)) return;
 	if (!ensure(JoinMenu != nullptr)) return;
 	MenuSwitcher->SetActiveWidget(JoinMenu);
+	if (MenuInterface != nullptr) {
+		MenuInterface->RefreshServerList();
+	}
 }
 
 
@@ -77,13 +108,14 @@ void UMainMenu::OpenMainMenu()
 
 void UMainMenu::joinServer(){
 
-	//UE_LOG(LogTemp, Warning, TEXT("I m gonna join a server!!"));
+	
 
 	if (MenuInterface != nullptr)
 	{
-		if (!ensure(txtIpadressField != nullptr)) return;
+		/*if (!ensure(txtIpadressField != nullptr)) return;
 		const FString &Address = txtIpadressField->GetText().ToString();
-		MenuInterface->Join(Address);
+		MenuInterface->Join(Address);*/
+		MenuInterface->Join("");
 	}
 
 }

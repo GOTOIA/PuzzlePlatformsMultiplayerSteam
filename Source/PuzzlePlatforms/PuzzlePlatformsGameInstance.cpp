@@ -9,6 +9,7 @@
 #include "OnlineSessionInterface.h"
 
 
+#include "MenuSystem/MainMenu.h"
 #include "MenuSystem/MenuWidget.h"
 #include "PlatformTrigger.h"
 
@@ -32,9 +33,7 @@ UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitiali
 
 void UPuzzlePlatformsGameInstance::Init()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("GameInstance Init"));
 
-	//UE_LOG(LogTemp, Warning, TEXT("Found class %s"), *MenuClass->GetName());
 	
 
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
@@ -46,14 +45,14 @@ void UPuzzlePlatformsGameInstance::Init()
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnFindSessionsComplete);
 			
-			SessionSearch = MakeShareable(new FOnlineSessionSearch());
+			/*SessionSearch = MakeShareable(new FOnlineSessionSearch());
 			if (SessionSearch.IsValid())
 			{
 				//SessionSearch->bIsLanQuery = true;
 
 				UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
 				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-			}
+			}*/
 
 		}
 	}
@@ -68,7 +67,7 @@ void UPuzzlePlatformsGameInstance::LoadMenuWidget()
 
 	if (!ensure(MenuClass != nullptr)) return;
 
-	Menu = CreateWidget<UMenuWidget>(this, MenuClass);
+	Menu = CreateWidget<UMainMenu>(this, MenuClass);
 	if (!ensure(Menu != nullptr)) return;
 
 	Menu->Setup();
@@ -82,7 +81,7 @@ void UPuzzlePlatformsGameInstance::InGameLoadMenu()
 {
 	if (!ensure(InGameMenuClass != nullptr)) return;
 
-	Menu = CreateWidget<UMenuWidget>(this, InGameMenuClass);
+	Menu = CreateWidget<UMainMenu>(this, InGameMenuClass);
 	if (!ensure(Menu != nullptr)) return;
 
 	Menu->Setup();
@@ -143,18 +142,19 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 {
 	if (Menu != nullptr)
 	{
-		Menu->Teardown();
+		Menu->SetServerList({ "Test1", "Test2" });
+		//Menu->Teardown();
 	}
 
-	UEngine* Engine = GetEngine();
-	if (!ensure(Engine != nullptr)) return;
+	//UEngine* Engine = GetEngine();
+	//if (!ensure(Engine != nullptr)) return;
 
-	Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
+	//Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
 
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController != nullptr)) return;
+	//APlayerController* PlayerController = GetFirstLocalPlayerController();
+	//if (!ensure(PlayerController != nullptr)) return;
 
-	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+	//PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }
 
 void UPuzzlePlatformsGameInstance::LoadMainMenu()
@@ -188,14 +188,42 @@ void UPuzzlePlatformsGameInstance::CreateSession()
 void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Success)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
-	if (Success && SessionSearch.IsValid())
+	/*if (Success && SessionSearch.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr());
 		}
+	}*/
+
+	if (Success && SessionSearch.IsValid() && Menu != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
+
+		TArray<FString> ServerNames;
+		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr());
+			ServerNames.Add(SearchResult.GetSessionIdStr());
+		}
+
+		Menu->SetServerList(ServerNames);
+		
+		
+		
 	}
 
 
+}
+
+void UPuzzlePlatformsGameInstance::RefreshServerList()
+{
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	if (SessionSearch.IsValid())
+	{
+		//SessionSearch->bIsLanQuery = true;
+		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
+		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+	}
 }

@@ -6,12 +6,12 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
 #include "OnlineSessionSettings.h"
-#include "OnlineSessionInterface.h"
+
 
 
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/MenuWidget.h"
-#include "PlatformTrigger.h"
+
 
 const static FName SESSION_NAME = TEXT("My Session Game");
 
@@ -42,19 +42,11 @@ void UPuzzlePlatformsGameInstance::Init()
 		SessionInterface = Subsystem->GetSessionInterface();
 		if (SessionInterface.IsValid()) {
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
-			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
+			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnFindSessionsComplete);
 			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnJoinSessionComplete);
 
-			/*SessionSearch = MakeShareable(new FOnlineSessionSearch());
-			if (SessionSearch.IsValid())
-			{
-				//SessionSearch->bIsLanQuery = true;
-
-				UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
-				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-			}*/
-
+	
 		}
 	}
 	else {
@@ -208,15 +200,7 @@ void UPuzzlePlatformsGameInstance::CreateSession()
 
 void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Success)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
-	/*if (Success && SessionSearch.IsValid())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
-		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr());
-		}
-	}*/
+	
 
 	if (Success && SessionSearch.IsValid() && Menu != nullptr)
 	{

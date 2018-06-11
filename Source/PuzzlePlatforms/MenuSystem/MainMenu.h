@@ -74,6 +74,19 @@ private:
 		UPROPERTY(meta = (BindWidget))
 		UPanelWidget* ServerList;
 
+		UPROPERTY(meta = (BindWidget))
+		class UWidget* HostMenu;
+
+		UPROPERTY(meta = (BindWidget))
+		class UEditableTextBox* ServerHostName;
+
+		UPROPERTY(meta = (BindWidget))
+		class UButton* cmdCancelHostMenu;
+
+		UPROPERTY(meta = (BindWidget))
+		class UButton* cmdConfirmHostMenu;
+
+
 	
 		UFUNCTION()
 		void hostServer();
@@ -89,6 +102,10 @@ private:
 
 		UFUNCTION()
 		void QuitPressed();
+
+		UFUNCTION()
+		void OpenHostMenu();
+
 
 		TOptional<uint32> SelectedIndex;
 

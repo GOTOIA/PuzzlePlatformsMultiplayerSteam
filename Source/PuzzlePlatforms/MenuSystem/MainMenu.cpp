@@ -28,24 +28,26 @@ bool UMainMenu::Initialize(){
     if (!Success) return false;
     
     if (!ensure(cmdHost != nullptr)) return false;
+	cmdHost->OnClicked.AddDynamic(this, &UMainMenu::OpenHostMenu);
 
-	cmdHost->OnClicked.AddDynamic(this, &UMainMenu::hostServer);
 
+	
+	if (!ensure(cmdCancelHostMenu != nullptr)) return false;
+	cmdCancelHostMenu->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
 
-	if (!ensure(cmdJoin != nullptr)) return false;
-		
+	if (!ensure(cmdConfirmHostMenu != nullptr)) return false;
+	cmdConfirmHostMenu->OnClicked.AddDynamic(this, &UMainMenu::hostServer);
+
+	if (!ensure(cmdJoin != nullptr)) return false;	
 	cmdJoin->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
 
 	if (!ensure(cmdCancelJoinMenuButton != nullptr)) return false;
-
 	cmdCancelJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
 
 	if (!ensure(cmdConfirmJoinMenuButton != nullptr)) return false;
-
 	cmdConfirmJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::joinServer);
 
 	if (!ensure(cmdQuitGame != nullptr)) return false;
-
 	cmdQuitGame->OnClicked.AddDynamic(this, &UMainMenu::QuitPressed);
 
 
@@ -63,7 +65,10 @@ void UMainMenu::hostServer(){
 
     if (MenuInterface != nullptr)
     {
-        MenuInterface->Host();
+       // MenuInterface->Host();
+		FString ServerName = ServerHostName->Text.ToString();
+		MenuInterface->Host(ServerName);
+
     }
 
 }
@@ -161,6 +166,12 @@ void UMainMenu::QuitPressed(){
 
     PlayerController->ConsoleCommand("quit");
 
+
+}
+
+void UMainMenu::OpenHostMenu()
+{
+	MenuSwitcher->SetActiveWidget(HostMenu);
 
 }
 

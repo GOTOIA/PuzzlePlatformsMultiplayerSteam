@@ -216,6 +216,15 @@ void UPuzzlePlatformsGameInstance::CreateSession()
 	}
 }
 
+void UPuzzlePlatformsGameInstance::StartSession()
+{
+	if (SessionInterface.IsValid())
+	{
+		SessionInterface->StartSession(SESSION_NAME);
+	}
+}
+
+
 void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Success)
 {
 	

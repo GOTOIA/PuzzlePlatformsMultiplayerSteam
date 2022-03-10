@@ -4,18 +4,16 @@
 
 #include "Components/Button.h"
 
-
-
 bool UInGameMenu::Initialize()
 {
 	bool Success = Super::Initialize();
 	if (!Success) return false;
 
-	if (!ensure(cmdCancel != nullptr)) return false;
-	cmdCancel->OnClicked.AddDynamic(this, &UInGameMenu::CancelPressed);
+	if (!ensure(CancelButton != nullptr)) return false;
+	CancelButton->OnClicked.AddDynamic(this, &UInGameMenu::CancelPressed);
 
-	if (!ensure(cmdQuit != nullptr)) return false;
-	cmdQuit->OnClicked.AddDynamic(this, &UInGameMenu::QuitPressed);
+	if (!ensure(QuitButton != nullptr)) return false;
+	QuitButton->OnClicked.AddDynamic(this, &UInGameMenu::QuitPressed);
 
 	return true;
 }
@@ -33,8 +31,3 @@ void UInGameMenu::QuitPressed()
 		MenuInterface->LoadMainMenu();
 	}
 }
-
-
-
-
-

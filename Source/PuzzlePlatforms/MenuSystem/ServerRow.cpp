@@ -2,7 +2,6 @@
 
 #include "ServerRow.h"
 
-
 #include "Components/Button.h"
 
 #include "MainMenu.h"
@@ -18,5 +17,6 @@ void UServerRow::OnClicked()
 {
 	Parent->SelectIndex(Index);
 }
+
 
 

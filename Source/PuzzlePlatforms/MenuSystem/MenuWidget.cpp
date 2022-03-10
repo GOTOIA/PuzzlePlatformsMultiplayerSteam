@@ -2,12 +2,6 @@
 
 #include "MenuWidget.h"
 
-void UMenuWidget::SetMenuInterface(IMenuInterface* MenuInterface)
-{
-	this->MenuInterface = MenuInterface;
-}
-
-
 void UMenuWidget::Setup()
 {
 	this->AddToViewport();
@@ -41,5 +35,10 @@ void UMenuWidget::Teardown()
 	PlayerController->SetInputMode(InputModeData);
 
 	PlayerController->bShowMouseCursor = false;
+}
+
+void UMenuWidget::SetMenuInterface(IMenuInterface* MenuInterface)
+{
+	this->MenuInterface = MenuInterface;
 }
 

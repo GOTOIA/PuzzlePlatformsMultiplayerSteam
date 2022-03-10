@@ -7,34 +7,23 @@
 #include "MainMenu.generated.h"
 
 USTRUCT()
-struct FServerData {
-
+struct FServerData 
+{
 	GENERATED_BODY()
 
 	FString Name;
 	uint16 CurrentPlayers;
 	uint16 MaxPlayers;
 	FString HostUsername;
-
-
 };
 
 /**
  * 
  */
-
-class UButton;
-class UWidgetSwitcher;
-class UWidget;
-class UEditableTextBox;
-
-
 UCLASS()
 class PUZZLEPLATFORMS_API UMainMenu : public UMenuWidget
 {
 	GENERATED_BODY()
-
-
 public:
 	UMainMenu(const FObjectInitializer & ObjectInitializer);
 
@@ -42,86 +31,71 @@ public:
 
 	void SelectIndex(uint32 Index);
 
+protected:
+	virtual bool Initialize();
 
 private:
+	TSubclassOf<class UUserWidget> ServerRowClass;
 
-		TSubclassOf<class UUserWidget> ServerRowClass;
-
-		UPROPERTY(meta = (BindWidget))
-		UButton *cmdHost=nullptr;
-
-		UPROPERTY(meta = (BindWidget))
-		UButton *cmdJoin=nullptr;
-
-		UPROPERTY(meta = (BindWidget))
-		UButton* cmdCancelJoinMenuButton;
-		
-		UPROPERTY(meta = (BindWidget))
-		UButton* cmdConfirmJoinMenuButton;
-
-		UPROPERTY(meta = (BindWidget))
-		UButton* cmdQuitGame;
-
-		UPROPERTY(meta = (BindWidget))
-		UWidgetSwitcher* MenuSwitcher;
-
-		UPROPERTY(meta = (BindWidget))
-		UWidget* MainMenu;
-
-		UPROPERTY(meta = (BindWidget))
-		UWidget* JoinMenu;
-
-		UPROPERTY(meta = (BindWidget))
-		UPanelWidget* ServerList;
-
-		UPROPERTY(meta = (BindWidget))
-		class UWidget* HostMenu;
-
-		UPROPERTY(meta = (BindWidget))
-		class UEditableTextBox* ServerHostName;
-
-		UPROPERTY(meta = (BindWidget))
-		class UButton* cmdCancelHostMenu;
-
-		UPROPERTY(meta = (BindWidget))
-		class UButton* cmdConfirmHostMenu;
-
-
+	UPROPERTY(meta = (BindWidget))
+	class UButton* HostButton;
 	
-		UFUNCTION()
-		void hostServer();
+	UPROPERTY(meta = (BindWidget))
+	class UButton* JoinButton;
 
-		UFUNCTION()
-		void joinServer();
+	UPROPERTY(meta = (BindWidget))
+	class UButton* QuitButton;
 
-		UFUNCTION()
-		void OpenJoinMenu();
+	UPROPERTY(meta = (BindWidget))
+	class UButton* CancelJoinMenuButton;
 
-		UFUNCTION()
-		void OpenMainMenu();
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ConfirmJoinMenuButton;
 
-		UFUNCTION()
-		void QuitPressed();
+	UPROPERTY(meta = (BindWidget))
+	class UWidgetSwitcher* MenuSwitcher;
 
-		UFUNCTION()
-		void OpenHostMenu();
+	UPROPERTY(meta = (BindWidget))
+	class UWidget* MainMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	class UWidget* JoinMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	class UWidget* HostMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	class UEditableTextBox* ServerHostName;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* CancelHostMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ConfirmHostMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UPanelWidget* ServerList;
+
+	UFUNCTION()
+	void HostServer();
+
+	UFUNCTION()
+	void JoinServer();
 
 
-		TOptional<uint32> SelectedIndex;
+	UFUNCTION()
+	void OpenHostMenu();
 
-		void UpdateChildren();
+	UFUNCTION()
+	void OpenJoinMenu();
 
+	UFUNCTION()
+	void OpenMainMenu();
 
+	UFUNCTION()
+	void QuitPressed();
 
-protected :
-		virtual bool Initialize();
+	TOptional<uint32> SelectedIndex;
 
-
-
-
-	    
-
-	
-
-	
+	void UpdateChildren();
 };

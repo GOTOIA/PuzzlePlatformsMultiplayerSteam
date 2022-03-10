@@ -10,20 +10,11 @@
 #include "MenuSystem/MenuInterface.h"
 #include "PuzzlePlatformsGameInstance.generated.h"
 
-
-
-
-
-
 /**
  * 
  */
-
-class UUserWidget;
-class UMenuWidget;
-
 UCLASS()
-class PUZZLEPLATFORMS_API UPuzzlePlatformsGameInstance : public UGameInstance,public IMenuInterface
+class PUZZLEPLATFORMS_API UPuzzlePlatformsGameInstance : public UGameInstance, public IMenuInterface
 {
 	GENERATED_BODY()
 
@@ -32,50 +23,39 @@ public:
 
 	virtual void Init();
 
-	UFUNCTION(BlueprintCallable)//call by blueprint
+	UFUNCTION(BlueprintCallable)
 	void LoadMenuWidget();
 
-	UFUNCTION(BlueprintCallable)//call by blueprint
+	UFUNCTION(BlueprintCallable)
 	void InGameLoadMenu();
-	
-	UFUNCTION(Exec)//call by console
+
+	UFUNCTION(Exec)
 	void Host(FString ServerName) override;
-	
 
 	UFUNCTION(Exec)
 	void Join(uint32 Index) override;
 
+	void StartSession();
 
 	virtual void LoadMainMenu() override;
 
 	void RefreshServerList() override;
 
-	void StartSession();
+private:
+	TSubclassOf<class UUserWidget> MenuClass;
+	TSubclassOf<class UUserWidget> InGameMenuClass;
 
-
-
-private :
-
-	TSubclassOf<UUserWidget> MenuClass;
-	TSubclassOf<UUserWidget> InGameMenuClass;
-
-
-	class UMainMenu *Menu;
+	class UMainMenu* Menu;
 
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
-	void CreateSession();
 	void OnFindSessionsComplete(bool Success);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
 
 	FString DesiredServerName;
-
-
-
-
-
-	
+	void CreateSession();
 };
